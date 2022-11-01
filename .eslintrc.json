@@ -35,7 +35,8 @@
       ],
       "no-useless-constructor": "off",
       "no-restricted-syntax": "off",
-      "no-await-in-loop": "off"
+      "no-await-in-loop": "off",
+      "consistent-return": "off" //observar
     },
     "settings": {
       "import/resolver": {
