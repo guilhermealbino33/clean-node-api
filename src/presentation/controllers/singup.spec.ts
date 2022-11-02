@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-classes-per-file
 import { SingUpController } from "./singup";
 import { InvalidParamError, MissingParamError, ServerError } from "../errors";
 import { EmailValidator } from "./protocols/emailValidator";
@@ -12,16 +11,6 @@ const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
     isValid(email: string): boolean {
       return true;
-    }
-  }
-
-  return new EmailValidatorStub();
-};
-
-const makeEmailValidatorWithError = (): EmailValidator => {
-  class EmailValidatorStub implements EmailValidator {
-    isValid(email: string): boolean {
-      throw new Error();
     }
   }
 
@@ -138,8 +127,11 @@ describe("SingUp Controller", () => {
   });
 
   test("Should return 500 if emailValidator throws", () => {
-    const emailValidatorStub = makeEmailValidatorWithError();
-    const sut = new SingUpController(emailValidatorStub);
+    const { sut, emailValidatorStub } = makeSut();
+
+    jest.spyOn(emailValidatorStub, "isValid").mockImplementationOnce(() => {
+      throw new Error();
+    });
 
     const httpRequest = {
       body: {
