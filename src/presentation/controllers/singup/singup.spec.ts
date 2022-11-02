@@ -1,9 +1,16 @@
 /* eslint-disable max-classes-per-file */
+import {
+  InvalidParamError,
+  MissingParamError,
+  ServerError,
+} from "../../errors";
 import { SingUpController } from "./singup";
-import { InvalidParamError, MissingParamError, ServerError } from "../errors";
-import { EmailValidator } from "./protocols/emailValidator";
-import { AddAccount, AddAccountModel } from "../../domain/usecases/account";
-import { AccountModel } from "../../domain/models/account";
+import {
+  EmailValidator,
+  AddAccount,
+  AccountModel,
+  AddAccountModel,
+} from "./singup-protocols";
 
 const makeEmailValidator = (): EmailValidator => {
   class EmailValidatorStub implements EmailValidator {
