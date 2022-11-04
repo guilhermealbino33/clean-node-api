@@ -1,9 +1,7 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable max-classes-per-file */
-import {
-  InvalidParamError,
-  MissingParamError,
-  ServerError,
-} from "../../errors";
+import { InvalidParamError, MissingParamError } from "../../errors";
+import { serverError } from "../../helpers/http-helper";
 import { SingUpController } from "./singup";
 import {
   EmailValidator,
@@ -193,7 +191,7 @@ describe("SingUp Controller", () => {
     const httpResponse = await sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(500);
-    expect(httpResponse.body).toEqual(new ServerError("error"));
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 
   test("Should call AddAccount with correct values", async () => {
@@ -220,11 +218,9 @@ describe("SingUp Controller", () => {
   test("Should return 500 if AddAccount throws", async () => {
     const { sut, addAccountStub } = makeSut();
 
-    const error = jest
-      .spyOn(addAccountStub, "add")
-      .mockImplementationOnce(() => {
-        throw new Error();
-      });
+    jest.spyOn(addAccountStub, "add").mockImplementationOnce(() => {
+      throw new Error();
+    });
 
     const httpRequest = {
       body: {
@@ -237,7 +233,7 @@ describe("SingUp Controller", () => {
     const httpResponse = await sut.handle(httpRequest);
 
     expect(httpResponse.statusCode).toBe(500);
-    expect(httpResponse.body).toEqual(new ServerError("error"));
+    expect(httpResponse).toEqual(serverError(new Error()));
   });
 
   test("Should return 200 if valid data is provided", async () => {
