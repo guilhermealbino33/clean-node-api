@@ -11,7 +11,7 @@ afterAll(async () => {
   await MongoHelper.disconnect();
 });
 
-beforeAll(async () => {
+beforeEach(async () => {
   const accountCollection = await MongoHelper.getCollection("accounts");
   accountCollection.deleteMany({});
 });
