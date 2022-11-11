@@ -13,6 +13,7 @@ import {
   AccountModel,
   AddAccountModel,
   HttpRequest,
+  Validation,
 } from "./singup-protocols";
 
 const makeEmailValidator = (): EmailValidator => {
@@ -42,11 +43,15 @@ const makeAddAccount = (): AddAccount => {
   return new AddAccountStub();
 };
 
-interface SutTypes {
-  sut: SingUpController;
-  emailValidatorStub: EmailValidator;
-  addAccountStub: AddAccount;
-}
+const makeValidation = (): Validation => {
+  class ValidationStub implements Validation {
+    validate(input: any): Error {
+      return null;
+    }
+  }
+
+  return new ValidationStub();
+};
 
 const makeFakeRequest = (): HttpRequest => ({
   body: {
@@ -57,15 +62,28 @@ const makeFakeRequest = (): HttpRequest => ({
   },
 });
 
+interface SutTypes {
+  sut: SingUpController;
+  emailValidatorStub: EmailValidator;
+  addAccountStub: AddAccount;
+  validationStub: Validation;
+}
+
 const makeSut = (): SutTypes => {
   const emailValidatorStub = makeEmailValidator();
   const addAccountStub = makeAddAccount();
-  const sut = new SingUpController(emailValidatorStub, addAccountStub);
+  const validationStub = makeValidation();
+  const sut = new SingUpController(
+    emailValidatorStub,
+    addAccountStub,
+    validationStub
+  );
 
   return {
     sut,
     emailValidatorStub,
     addAccountStub,
+    validationStub,
   };
 };
 
@@ -211,5 +229,15 @@ describe("SingUp Controller", () => {
     const { sut } = makeSut();
     const httpResponse = await sut.handle(makeFakeRequest());
     expect(httpResponse).toEqual(ok(makeFakeAccount()));
+  });
+
+  test("Should call Validation with correct value", async () => {
+    const { sut, validationStub } = makeSut();
+    const validateSpy = jest.spyOn(validationStub, "validate");
+
+    const httpRequest = makeFakeRequest();
+    await sut.handle(httpRequest);
+
+    expect(validateSpy).toHaveBeenCalledWith(httpRequest.body);
   });
 });
