@@ -1,5 +1,5 @@
 import { badRequest, serverError, ok } from "../../helpers/http-helper";
-import { InvalidParamError, MissingParamError } from "../../errors";
+import { InvalidParamError } from "../../errors";
 import {
   Controller,
   EmailValidator,
@@ -34,11 +34,7 @@ export class SingUpController implements Controller {
         return badRequest(error);
       }
 
-      const { name, email, password, passwordConfirmation } = httpRequest.body;
-
-      if (password !== passwordConfirmation) {
-        return badRequest(new InvalidParamError("passwordConfirmation"));
-      }
+      const { name, email, password } = httpRequest.body;
 
       const isValid = this.emailValidator.isValid(email);
       if (!isValid) {
