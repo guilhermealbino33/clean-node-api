@@ -34,19 +34,6 @@ export class SingUpController implements Controller {
         return badRequest(error);
       }
 
-      const requiredFields = [
-        "name",
-        "email",
-        "password",
-        "passwordConfirmation",
-      ];
-
-      for (const field of requiredFields) {
-        if (!httpRequest.body[field]) {
-          return badRequest(new MissingParamError(field));
-        }
-      }
-
       const { name, email, password, passwordConfirmation } = httpRequest.body;
 
       if (password !== passwordConfirmation) {
