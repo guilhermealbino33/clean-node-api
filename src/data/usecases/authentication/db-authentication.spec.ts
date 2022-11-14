@@ -52,11 +52,14 @@ describe("DbAuthentication UseCase", () => {
     expect(loadSpy).toHaveBeenCalledWith("any_email@email.com");
   });
 
-  test("Should call LoadAccountByEmailRepository with correct email", async () => {
+  test("Should throw if LoadAccountByEmailRepository throws", async () => {
     const { sut, loadAccountByEmailRepositoryStub } = makeSut();
-    const loadSpy = jest.spyOn(loadAccountByEmailRepositoryStub, "load");
-    await sut.auth(makeFakeAuthentication());
+    jest.spyOn(loadAccountByEmailRepositoryStub, "load").mockReturnValueOnce(
+      // eslint-disable-next-line no-promise-executor-return
+      new Promise((resolve, reject) => reject(new Error()))
+    );
+    const promise = sut.auth(makeFakeAuthentication());
 
-    expect(loadSpy).toHaveBeenCalledWith("any_email@email.com");
+    await expect(promise).rejects.toThrow();
   });
 });
