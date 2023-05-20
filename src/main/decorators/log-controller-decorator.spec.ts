@@ -2,7 +2,7 @@
 /* eslint-disable max-classes-per-file */
 /* eslint-disable no-promise-executor-return */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import { LogErrorRepository } from "../../data/protocols/db/log-error-repository";
+import { LogErrorRepository } from "../../data/protocols/db/log/log-error-repository";
 import { AccountModel } from "../../domain/models/account";
 import { ok, serverError } from "../../presentation/helpers/http/http-helper";
 import {
@@ -10,7 +10,7 @@ import {
   HttpRequest,
   HttpResponse,
 } from "../../presentation/protocols";
-import { LogControllerDecorator } from "./log";
+import { LogControllerDecorator } from "./log-controller-decorator";
 
 const makeLogErrorRepository = (): LogErrorRepository => {
   class LogErrorRepositoryStubStub implements LogErrorRepository {

@@ -5,7 +5,7 @@ import {
   HttpResponse,
   AddAccount,
   Validation,
-} from "./singup-protocols";
+} from "./singup-controller-protocols";
 
 export class SingUpController implements Controller {
   private readonly addAccount: AddAccount;
